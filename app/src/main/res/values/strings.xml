@@ -3,4 +3,33 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="prefAutopicture">Автосмена</string>
+    <string name="prefAutopictureSummary">Автоматичский меняет изображения с заданым интервалом</string>
+    <string name="prefChbAutoKey">prefChbAuto</string>
+
+    <string name="prefEditTextSummary">Введите интервал в секундах, от 1 до 5 с которым изображения будт автоматически переключаться</string>
+    <string name="prefEditTextTitle">Интервал</string>
+    <string name="prefEditHint">Введите интервал</string>
+
+
+    <string name="prefChbFavoriteSummary">если включено показывает только favorite, если выключено показывает все</string>
+    <string name="prefChbFavoriteTitle">Только favorite</string>
+    <string name="prefChbFavoriteKey">prefChbFave</string>
+
+    <string name="prefChbRandomSummary">если выключено показывает по порядку</string>
+    <string name="prefChbRandomTitle">Показывать случайно</string>
+    <string name="prefChbRandomKey">prefChbRand</string>
+
+    <string name="prefListAnimSummary">Выбирете один из предложенных видов анимации</string>
+    <string name="prefListAnimTitle">Вид анимации</string>
+    <string-array name="entries">
+        <item>one</item>
+        <item>two</item>
+        <item>three</item>
+    </string-array>
+    <string-array name="entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

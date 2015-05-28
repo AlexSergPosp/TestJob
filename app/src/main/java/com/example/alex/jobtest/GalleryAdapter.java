@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 
 public class GalleryAdapter extends Fragment {
 
@@ -19,6 +23,8 @@ public class GalleryAdapter extends Fragment {
      public static ImageView imageView;
      public static TextView textView;
      public static ProgressBar progressBar;
+     DisplayImageOptions defaultOptions;
+     ImageLoaderConfiguration config;
 
     public static String[] URL1 = {"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRhG5rMM3UX8z4JG0PE9JnTPa7iaXOiB6pLE_soQNbwlryt8mdy5A",
             "http://rewalls.com/large/201203/63548.jpg"
@@ -30,8 +36,6 @@ public class GalleryAdapter extends Fragment {
             ,"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR7kc-mLhgU28WVKduFfAjeVZPmUt1ybUjejT-hv_jkOH0bH3Ld"
             ,"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSzeU-InYeIZbDjb8bxz5NzsR3QCcPtHhd9f_jaT2gYImoyYfFA"
             ,"http://f9.ifotki.info/org/71a2543234450c4cd8b01c150cccfcc44e24d797267247.jpg"};
-    Loader task = new Loader();
-
     static GalleryAdapter newInstance(int page){
             Log.d(MainActivity.TAG,"GalleryAdapter newInstance");
             GalleryAdapter galleryAdapter = new GalleryAdapter();
@@ -43,18 +47,27 @@ public class GalleryAdapter extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(MainActivity.TAG,"GalleryAdapter onCreate");
+        Log.d(MainActivity.TAG, "GalleryAdapter onCreate");
         super.onCreate(savedInstanceState);
         pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
         // do rand or raw
+        defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .build();
+        config = new ImageLoaderConfiguration.Builder(getActivity())
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+        ImageLoader.getInstance().init(config);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         View v = inflater.inflate(R.layout.gallery,null);
+            Log.d(MainActivity.TAG, "GalleryAdapter onCreateView");
+            View v = inflater.inflate(R.layout.gallery,null);
+
             imageView = (ImageView) v.findViewById(R.id.imageView);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
             textView = (TextView) v.findViewById(R.id.textView);
-            task.execute(URL1[pageNumber]);
+            ImageLoader.getInstance().displayImage(URL1[pageNumber],imageView);
         return v;
     }
 }
