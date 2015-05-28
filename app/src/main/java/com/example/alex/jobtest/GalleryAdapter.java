@@ -36,6 +36,7 @@ public class GalleryAdapter extends Fragment {
             ,"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR7kc-mLhgU28WVKduFfAjeVZPmUt1ybUjejT-hv_jkOH0bH3Ld"
             ,"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSzeU-InYeIZbDjb8bxz5NzsR3QCcPtHhd9f_jaT2gYImoyYfFA"
             ,"http://f9.ifotki.info/org/71a2543234450c4cd8b01c150cccfcc44e24d797267247.jpg"};
+
     static GalleryAdapter newInstance(int page){
             Log.d(MainActivity.TAG,"GalleryAdapter newInstance");
             GalleryAdapter galleryAdapter = new GalleryAdapter();

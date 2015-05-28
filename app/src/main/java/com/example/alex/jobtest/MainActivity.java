@@ -22,7 +22,18 @@ public class MainActivity extends FragmentActivity {
     ViewPager viewPager;
     PagerAdapter pagerAdapter;
     SharedPreferences sp;
+    public static boolean prefAuto;
+    public static boolean prefFavorite;
+    public static boolean prefRand;
+    public static String prefInterval;
+    public static String prefAnim;
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPref();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,7 @@ public class MainActivity extends FragmentActivity {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOnPageChangeListener(getListenerAdapter());
         sp = PreferenceManager.getDefaultSharedPreferences(this);
+
     }
 
     private ViewPager.OnPageChangeListener getListenerAdapter() {
@@ -83,5 +95,19 @@ public class MainActivity extends FragmentActivity {
             Log.d(TAG,"MainActivity MyFragmentPagerAdapter getCount");
             return pageCount;
         }
+    }
+
+    public void getPref(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        prefAuto = preferences.getBoolean("auto",false);
+        prefFavorite = preferences.getBoolean("favorite", false);
+        prefRand = preferences.getBoolean("random",false);
+        prefInterval = preferences.getString("interval", "1");
+        prefAnim = preferences.getString("list","1");
+        Log.d(MainActivity.TAG,"get pref(), prefAuto - " + prefAuto
+                +" prefFavorite - " + prefFavorite
+                +" prefRand - " + prefRand
+                +" prefInterval - " + prefInterval
+                +" prefAnim - " + prefAnim);
     }
 }
