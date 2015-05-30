@@ -1,5 +1,7 @@
 package com.example.alex.jobtest;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
@@ -15,7 +17,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,6 +40,8 @@ public class MainActivity extends FragmentActivity {
     public static boolean prefRand;
     public static String prefInterval;
     public static String prefAnim;
+    static HashMap<Integer,Image> hashMap = new HashMap<>(10);
+    String comment;
 
 
     @Override
@@ -87,7 +94,32 @@ public class MainActivity extends FragmentActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+        // add to avorite hash map.
+        public void favorite(View view) {
 
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        final EditText editText = new EditText(MainActivity.this);
+        alertDialog.setMessage("Введите коментарий");
+        alertDialog.setTitle("Комментарий");
+        alertDialog.setView(editText);
+
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                comment = editText.getText().toString();
+            }
+        });
+
+        alertDialog.show();
+            Log.d(TAG, "favorite");
+            GalleryAdapter.arrayList.get(GalleryAdapter.pageNumber).setCOM(comment);
+            GalleryAdapter.arrayList.get(GalleryAdapter.pageNumber).setFAVOR(true);
+        //if (!hashMap.containsKey(GalleryAdapter.pageNumber)) {
+           // hashMap.put(GalleryAdapter.pageNumber, GalleryAdapter.arrayList.get(GalleryAdapter.pageNumber));
+            //hashMap.get(GalleryAdapter.pageNumber).setFAVOR(true);
+            //hashMap.get(GalleryAdapter.pageNumber).setCOM(comment);
+     //   }
+    }
 
     private class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
 

@@ -10,15 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +23,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -34,6 +30,7 @@ import java.util.Random;
 public class GalleryAdapter extends Fragment {
 
      static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
+     static volatile HashMap<Integer,Image> arrayList;
      static int pageNumber;
      static String textForTextView;
      public static ImageView imageView;
@@ -47,7 +44,7 @@ public class GalleryAdapter extends Fragment {
             Log.d(MainActivity.TAG,"GalleryAdapter newInstance");
             GalleryAdapter galleryAdapter = new GalleryAdapter();
             Bundle arguments = new Bundle();
-            arguments.putInt(ARGUMENT_PAGE_NUMBER,page);
+            arguments.putInt(ARGUMENT_PAGE_NUMBER, page);
             galleryAdapter.setArguments(arguments);
             return  galleryAdapter;
         }
@@ -56,14 +53,37 @@ public class GalleryAdapter extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(MainActivity.TAG, "GalleryAdapter onCreate");
         super.onCreate(savedInstanceState);
+        preferenceRandom();
+        pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
+        imageLoading();
+        try {
+            arrayList = getJsonData();
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        preferenceFavorite();
+    }
 
-        //get page number from constructor and use as adapter's arguments
+    private void preferenceFavorite() {
+        if (!MainActivity.prefFavorite){
+        URL1 = arrayList.get(pageNumber).getURL();
+        textForTextView = arrayList.get(pageNumber).getID();
+        } else {
+           if (arrayList.get(pageNumber).isFAVOR()){
+               URL1 = arrayList.get(pageNumber).getURL();
+               textForTextView = arrayList.get(pageNumber).getCOM();
+           }
+        }
+    }
+
+    private void preferenceRandom() {
         if (MainActivity.prefRand){
             Random random = new Random();
             pageNumber = random.nextInt(MainActivity.pageCount);
         }
-        pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
-        //use Universal Loader(in dependencies)
+    }
+
+    private void imageLoading() {
         defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .build();
@@ -71,22 +91,8 @@ public class GalleryAdapter extends Fragment {
                 .defaultDisplayImageOptions(defaultOptions)
                 .build();
         ImageLoader.getInstance().init(config);
-
-        // get Image list from getJsonData method
-        try {
-            HashMap<Integer,Image> arrayList = getJsonData();
-            URL1 = arrayList.get(pageNumber).getURL();
-            textForTextView = arrayList.get(pageNumber).getID();
-
-        } catch (IOException e) {
-            Log.d(MainActivity.TAG,"GalleryAdapter onCreate Exception");
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             Log.d(MainActivity.TAG, "GalleryAdapter onCreateView");
@@ -134,6 +140,8 @@ public class GalleryAdapter extends Fragment {
                     image.setID(object.getString("id"));
                     image.setNUMBER(object.getString("number"));
                     image.setURL(object.getString("url"));
+                    image.setCOM("");
+                    image.setFAVOR(false);
                     imageList.put(num-1, image);
         }
         return imageList;

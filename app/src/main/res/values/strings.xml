@@ -22,6 +22,7 @@
 
     <string name="prefListAnimSummary">Выбирете один из предложенных видов анимации</string>
     <string name="prefListAnimTitle">Вид анимации</string>
+    <string name="dialogPositiveButton">Ok</string>
     <string-array name="entries">
         <item>one</item>
         <item>two</item>
