@@ -30,7 +30,7 @@ import java.util.Random;
 public class GalleryAdapter extends Fragment {
 
      static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
-     static volatile HashMap<Integer,Image> arrayList;
+     static volatile HashMap<Integer,Image> imageHashMap;
      static int pageNumber;
      static String textForTextView;
      public static ImageView imageView;
@@ -38,7 +38,7 @@ public class GalleryAdapter extends Fragment {
      public static ProgressBar progressBar;
      DisplayImageOptions defaultOptions;
      ImageLoaderConfiguration config;
-    public static String URL1;
+     public static String URL1;
             // Constructor
     static GalleryAdapter newInstance(int page){
             Log.d(MainActivity.TAG,"GalleryAdapter newInstance");
@@ -53,34 +53,20 @@ public class GalleryAdapter extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(MainActivity.TAG, "GalleryAdapter onCreate");
         super.onCreate(savedInstanceState);
-        preferenceRandom();
-        pageNumber = getArguments().getInt(ARGUMENT_PAGE_NUMBER);
+        Setting setting = new Setting();
+        pageNumber = setting.preferenceRandom(pageNumber,getArguments().getInt(ARGUMENT_PAGE_NUMBER));
         imageLoading();
         try {
-            arrayList = getJsonData();
+            imageHashMap = getJsonData();
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
-        preferenceFavorite();
-    }
-
-    private void preferenceFavorite() {
-        if (!MainActivity.prefFavorite){
-        URL1 = arrayList.get(pageNumber).getURL();
-        textForTextView = arrayList.get(pageNumber).getID();
-        } else {
-           if (arrayList.get(pageNumber).isFAVOR()){
-               URL1 = arrayList.get(pageNumber).getURL();
-               textForTextView = arrayList.get(pageNumber).getCOM();
-           }
-        }
-    }
-
-    private void preferenceRandom() {
-        if (MainActivity.prefRand){
-            Random random = new Random();
-            pageNumber = random.nextInt(MainActivity.pageCount);
-        }
+            if (MainActivity.prefFavorite)
+            URL1 = MainActivity.setting.showFavorite(MainActivity.arrayListFavorite);
+            else {
+                URL1 = imageHashMap.get(pageNumber).getURL();
+                textForTextView = imageHashMap.get(pageNumber).getID();
+            }
     }
 
     private void imageLoading() {
@@ -100,6 +86,7 @@ public class GalleryAdapter extends Fragment {
             imageView = (ImageView) v.findViewById(R.id.imageView);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
             textView = (TextView) v.findViewById(R.id.textView);
+
             ImageLoader.getInstance().displayImage(URL1, imageView);
             textView.setText(textForTextView);
         return v;

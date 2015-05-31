@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Timer;
@@ -40,13 +41,14 @@ public class MainActivity extends FragmentActivity {
     public static boolean prefRand;
     public static String prefInterval;
     public static String prefAnim;
-    static HashMap<Integer,Image> hashMap = new HashMap<>(10);
+    static ArrayList<Image> arrayListFavorite = new ArrayList<>();
     String comment;
+    static Setting setting = new Setting();
 
 
     @Override
     protected void onResume() {
-        Log.d(TAG,"onResume");
+        Log.d(TAG, "onResume");
         super.onResume();
         getPref();
     }
@@ -71,12 +73,12 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.d(TAG, "onPageSelected, position = " + position);
+
             }
 
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected, position = " + position);
-
             }
 
             @Override
@@ -95,7 +97,7 @@ public class MainActivity extends FragmentActivity {
         return super.onCreateOptionsMenu(menu);
     }
         // add to avorite hash map.
-        public void favorite(View view) {
+        public void favoriteOnClick(View view) {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         final EditText editText = new EditText(MainActivity.this);
@@ -109,16 +111,8 @@ public class MainActivity extends FragmentActivity {
                 comment = editText.getText().toString();
             }
         });
-
         alertDialog.show();
-            Log.d(TAG, "favorite");
-            GalleryAdapter.arrayList.get(GalleryAdapter.pageNumber).setCOM(comment);
-            GalleryAdapter.arrayList.get(GalleryAdapter.pageNumber).setFAVOR(true);
-        //if (!hashMap.containsKey(GalleryAdapter.pageNumber)) {
-           // hashMap.put(GalleryAdapter.pageNumber, GalleryAdapter.arrayList.get(GalleryAdapter.pageNumber));
-            //hashMap.get(GalleryAdapter.pageNumber).setFAVOR(true);
-            //hashMap.get(GalleryAdapter.pageNumber).setCOM(comment);
-     //   }
+        setting.addFavorite(arrayListFavorite,comment,GalleryAdapter.imageHashMap,GalleryAdapter.pageNumber);
     }
 
     private class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
@@ -143,7 +137,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG,"onPause");
+        Log.d(TAG, "onPause");
         if (handler!= null) {
             handler.removeCallbacks(runnable);
         }
@@ -156,7 +150,7 @@ public class MainActivity extends FragmentActivity {
      // get and use them
     public void getPref(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        prefAuto = preferences.getBoolean("auto",false);
+        prefAuto = preferences.getBoolean("auto", false);
         prefFavorite = preferences.getBoolean("favorite", false);
         prefRand = preferences.getBoolean("random", false);
         prefInterval = preferences.getString("interval", "1");
@@ -167,12 +161,10 @@ public class MainActivity extends FragmentActivity {
                 + " prefInterval - " + prefInterval
                 + " prefAnim - " + prefAnim);
         autoSliding();
-        animation(Integer.parseInt(prefAnim));
+        setting.animation(Integer.parseInt(prefAnim), viewPager);
 
 
     }
-    // if auto sliding turn on? then wse this method
-
    private void autoSliding(){
         if (prefAuto) {
             Log.d(TAG, "if start");
@@ -180,7 +172,7 @@ public class MainActivity extends FragmentActivity {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    if (position > 4) {
+                    if (position == pageCount) {
                         position = 0;
                     } else {
                         position++;
@@ -201,14 +193,5 @@ public class MainActivity extends FragmentActivity {
 
         }
     }
-    private void animation(int i){
-        switch (i) {
-            case 1: viewPager.setPageTransformer(true, new DepthPageTransformer());
-                break;
-            case 2: viewPager.setPageTransformer(true, new ZoomOutPageTransforme());
-                break;
-            case 3: viewPager.setPageTransformer(true, new DepthPageTransformer());
-                break;
-        }
-    }
+
 }
