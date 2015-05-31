@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -43,6 +44,7 @@ public class MainActivity extends FragmentActivity {
     public static String prefAnim;
     static ArrayList<Image> arrayListFavorite = new ArrayList<>();
     String comment;
+    static int i = 0;
     static Setting setting = new Setting();
 
 
@@ -65,25 +67,25 @@ public class MainActivity extends FragmentActivity {
         viewPager.setOnPageChangeListener(getListenerAdapter());
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-
     }
 
     private ViewPager.OnPageChangeListener getListenerAdapter() {
         return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d(TAG, "onPageSelected, position = " + position);
+
+                //Log.d(TAG, "onPageSelected, position = " + i);
 
             }
 
             @Override
             public void onPageSelected(int position) {
-                Log.d(TAG, "onPageSelected, position = " + position);
+               // Log.d(TAG, "onPageSelected, position = " + position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.d(TAG, "onPageScrollStateChanged = " + state);
+                //Log.d(TAG, "onPageScrollStateChanged = " + i);
 
             }
         };
@@ -112,10 +114,10 @@ public class MainActivity extends FragmentActivity {
             }
         });
         alertDialog.show();
-        setting.addFavorite(arrayListFavorite,comment,GalleryAdapter.imageHashMap,GalleryAdapter.pageNumber);
+        setting.addFavorite(arrayListFavorite, comment, GalleryAdapter.imageHashMap, viewPager.getCurrentItem());
     }
 
-    private class MyFragmentPagerAdapter extends FragmentStatePagerAdapter{
+    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -123,13 +125,13 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Log.d(TAG,"MainActivity MyFragmentPagerAdapter getItem");
+            //Log.d(TAG,"MainActivity MyFragmentPagerAdapter getItem "+position);
             return GalleryAdapter.newInstance(position);
         }
 
         @Override
         public int getCount() {
-            Log.d(TAG,"MainActivity MyFragmentPagerAdapter getCount");
+            //Log.d(TAG,"MainActivity MyFragmentPagerAdapter getCount");
             return pageCount;
         }
     }

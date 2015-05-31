@@ -34,13 +34,16 @@ public class Setting {
     }
 
     public void addFavorite(ArrayList<Image>arrayList, String comment,HashMap<Integer,Image> hashMap, int index) {
-        if (!arrayList.contains(hashMap.get(index-1))) {
-            Image image = hashMap.get(index - 1);
-            image.setCOM(comment);
-            arrayList.add(image);
-        }
-    }
 
+            if (!arrayList.contains(hashMap.get(index))) {
+                Image image = hashMap.get(index);
+                if (image != null) {
+                    image.setCOM(comment);
+                    arrayList.add(image);
+
+                            }
+                        }
+                    }
 
     public String showFavorite(ArrayList<Image> arrayList) {
         Log.d(MainActivity.TAG, "showFavorite");

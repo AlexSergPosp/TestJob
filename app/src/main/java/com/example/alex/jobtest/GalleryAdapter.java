@@ -53,20 +53,7 @@ public class GalleryAdapter extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(MainActivity.TAG, "GalleryAdapter onCreate");
         super.onCreate(savedInstanceState);
-        Setting setting = new Setting();
-        pageNumber = setting.preferenceRandom(pageNumber,getArguments().getInt(ARGUMENT_PAGE_NUMBER));
         imageLoading();
-        try {
-            imageHashMap = getJsonData();
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
-        }
-            if (MainActivity.prefFavorite)
-            URL1 = MainActivity.setting.showFavorite(MainActivity.arrayListFavorite);
-            else {
-                URL1 = imageHashMap.get(pageNumber).getURL();
-                textForTextView = imageHashMap.get(pageNumber).getID();
-            }
     }
 
     private void imageLoading() {
@@ -81,12 +68,28 @@ public class GalleryAdapter extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            Log.d(MainActivity.TAG, "GalleryAdapter onCreateView");
-            View v = inflater.inflate(R.layout.gallery,null);
+        Log.d(MainActivity.TAG, "GalleryAdapter onCreateView");
+        View v = inflater.inflate(R.layout.gallery,null);
+        Setting setting = new Setting();
+        pageNumber = setting.preferenceRandom(pageNumber,getArguments().getInt(ARGUMENT_PAGE_NUMBER));
+        Log.d(MainActivity.TAG, "pageNumber" + String.valueOf(pageNumber));
+
+        if (MainActivity.prefFavorite)
+            URL1 = MainActivity.setting.showFavorite(MainActivity.arrayListFavorite);
+        else {
+            try {
+                imageHashMap = getJsonData();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            URL1 = imageHashMap.get(pageNumber).getURL();
+            textForTextView = imageHashMap.get(pageNumber).getID();
+        }
             imageView = (ImageView) v.findViewById(R.id.imageView);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
             textView = (TextView) v.findViewById(R.id.textView);
-
             ImageLoader.getInstance().displayImage(URL1, imageView);
             textView.setText(textForTextView);
         return v;
@@ -97,11 +100,9 @@ public class GalleryAdapter extends Fragment {
 
          // parsing Json from resource
          String loadJsonFromRes() throws IOException {
-        Log.d(MainActivity.TAG,"start");
+        Log.d(MainActivity.TAG,"loadFromRes()");
         InputStream is = getResources().openRawResource(R.raw.json);
-        Log.d(MainActivity.TAG,"2");
         Writer writer = new StringWriter();
-        Log.d(MainActivity.TAG,"3");
         char[] buffer = new char[1024];
         try {
             Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -112,10 +113,10 @@ public class GalleryAdapter extends Fragment {
         } finally {
             is.close();
         }
-        Log.d(MainActivity.TAG, "4");
         return writer.toString();
     }
         HashMap<Integer,Image> getJsonData() throws JSONException, IOException {
+        Log.d(MainActivity.TAG,"getJsonData()");
         JSONObject jsonObject = new JSONObject(loadJsonFromRes());
         JSONArray array = jsonObject.getJSONArray("image");
         HashMap<Integer,Image> imageList = new HashMap<>();
@@ -123,7 +124,6 @@ public class GalleryAdapter extends Fragment {
                     JSONObject object = array.getJSONObject(i);
                     int num = Integer.parseInt(object.getString("number"));
                     Image image = new Image();
-                    Log.d(MainActivity.TAG, "5");
                     image.setID(object.getString("id"));
                     image.setNUMBER(object.getString("number"));
                     image.setURL(object.getString("url"));
