@@ -74,8 +74,13 @@ public class GalleryAdapter extends Fragment {
         pageNumber = setting.preferenceRandom(pageNumber,getArguments().getInt(ARGUMENT_PAGE_NUMBER));
         Log.d(MainActivity.TAG, "pageNumber" + String.valueOf(pageNumber));
 
-        if (MainActivity.prefFavorite)
-            URL1 = MainActivity.setting.showFavorite(MainActivity.arrayListFavorite);
+        if (MainActivity.prefFavorite) {
+            Image image = MainActivity.setting.getFavoriteUrl(MainActivity.arrayListFavorite);
+            if (image!=null) {
+                URL1 = image.getURL();
+                textForTextView = image.getCOM();
+            }
+        }
         else {
             try {
                 imageHashMap = getJsonData();
@@ -84,8 +89,8 @@ public class GalleryAdapter extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            URL1 = imageHashMap.get(pageNumber).getURL();
             textForTextView = imageHashMap.get(pageNumber).getID();
+            URL1 = imageHashMap.get(pageNumber).getURL();
         }
             imageView = (ImageView) v.findViewById(R.id.imageView);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
@@ -127,8 +132,6 @@ public class GalleryAdapter extends Fragment {
                     image.setID(object.getString("id"));
                     image.setNUMBER(object.getString("number"));
                     image.setURL(object.getString("url"));
-                    image.setCOM("");
-                    image.setFAVOR(false);
                     imageList.put(num-1, image);
         }
         return imageList;

@@ -111,10 +111,11 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 comment = editText.getText().toString();
+                setting.addFavorite(arrayListFavorite, comment, GalleryAdapter.imageHashMap, viewPager.getCurrentItem());
             }
         });
         alertDialog.show();
-        setting.addFavorite(arrayListFavorite, comment, GalleryAdapter.imageHashMap, viewPager.getCurrentItem());
+
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

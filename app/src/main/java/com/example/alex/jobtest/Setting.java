@@ -40,21 +40,20 @@ public class Setting {
                 if (image != null) {
                     image.setCOM(comment);
                     arrayList.add(image);
-
                             }
                         }
                     }
 
-    public String showFavorite(ArrayList<Image> arrayList) {
+    public Image getFavoriteUrl(ArrayList<Image> arrayList) {
         Log.d(MainActivity.TAG, "showFavorite");
-        String url = "http://content.govdelivery.com/attachments/fancy_images/USED/2012/11/134067/143625/my-favorite-no_original_crop.jpg";
         Random random = new Random();
+        Image image = null;
         if (arrayList.size() != 0) {
             int i = random.nextInt(arrayList.size());
-            url = arrayList.get(i).getURL();
+            image = arrayList.get(i);
         }
-        return url;
+        return image;
     }
 
-    }
+}
 
