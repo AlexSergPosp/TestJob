@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -24,21 +24,16 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.Random;
-
 
 public class GalleryAdapter extends Fragment {
 
      static final String ARGUMENT_PAGE_NUMBER = "arg_page_number";
      static volatile HashMap<Integer,Image> imageHashMap;
-     static int pageNumber;
+     private int pageNumber;
      static String textForTextView;
      public static ImageView imageView;
-     public static TextView textView;
-     public static ProgressBar progressBar;
-     DisplayImageOptions defaultOptions;
-     ImageLoaderConfiguration config;
      public static String URL1;
+    private TextView textViewForcomment;
             // Constructor
     static GalleryAdapter newInstance(int page){
             Log.d(MainActivity.TAG,"GalleryAdapter newInstance");
@@ -57,10 +52,12 @@ public class GalleryAdapter extends Fragment {
     }
 
     private void imageLoading() {
-        defaultOptions = new DisplayImageOptions.Builder()
+        Log.d(MainActivity.TAG,"imageLoading()");
+        // use Universal Image Loader;
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .build();
-        config = new ImageLoaderConfiguration.Builder(getActivity())
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity())
                 .defaultDisplayImageOptions(defaultOptions)
                 .build();
         ImageLoader.getInstance().init(config);
@@ -71,11 +68,12 @@ public class GalleryAdapter extends Fragment {
         Log.d(MainActivity.TAG, "GalleryAdapter onCreateView");
         View v = inflater.inflate(R.layout.gallery,null);
         Setting setting = new Setting();
+        textViewForcomment = (TextView) v.findViewById(R.id.textView);
         pageNumber = setting.preferenceRandom(pageNumber,getArguments().getInt(ARGUMENT_PAGE_NUMBER));
         Log.d(MainActivity.TAG, "pageNumber" + String.valueOf(pageNumber));
 
         if (MainActivity.prefFavorite) {
-            Image image = MainActivity.setting.getFavoriteUrl(MainActivity.arrayListFavorite);
+            Image image = MainActivity.setting.getFavorite(MainActivity.arrayListFavorite);
             if (image!=null) {
                 URL1 = image.getURL();
                 textForTextView = image.getCOM();
@@ -84,27 +82,22 @@ public class GalleryAdapter extends Fragment {
         else {
             try {
                 imageHashMap = getJsonData();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
             textForTextView = imageHashMap.get(pageNumber).getID();
             URL1 = imageHashMap.get(pageNumber).getURL();
         }
             imageView = (ImageView) v.findViewById(R.id.imageView);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-            textView = (TextView) v.findViewById(R.id.textView);
             ImageLoader.getInstance().displayImage(URL1, imageView);
-            textView.setText(textForTextView);
+        if(textForTextView != null) {
+            textViewForcomment.setVisibility(View.VISIBLE);
+            textViewForcomment.setText(textForTextView);
+        }
+        else textViewForcomment.setVisibility(View.INVISIBLE);
         return v;
     }
-
-
-
-
-         // parsing Json from resource
-         String loadJsonFromRes() throws IOException {
+        private String loadJsonFromRes() throws IOException {
         Log.d(MainActivity.TAG,"loadFromRes()");
         InputStream is = getResources().openRawResource(R.raw.json);
         Writer writer = new StringWriter();
@@ -120,7 +113,7 @@ public class GalleryAdapter extends Fragment {
         }
         return writer.toString();
     }
-        HashMap<Integer,Image> getJsonData() throws JSONException, IOException {
+        private HashMap<Integer,Image> getJsonData() throws JSONException, IOException {
         Log.d(MainActivity.TAG,"getJsonData()");
         JSONObject jsonObject = new JSONObject(loadJsonFromRes());
         JSONArray array = jsonObject.getJSONArray("image");

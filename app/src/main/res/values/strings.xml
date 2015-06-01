@@ -7,7 +7,7 @@
     <string name="prefAutopictureSummary">Автоматичский меняет изображения с заданым интервалом</string>
     <string name="prefChbAutoKey">prefChbAuto</string>
 
-    <string name="prefEditTextSummary">Введите интервал в секундах, от 1 до 5 с которым изображения будт автоматически переключаться</string>
+    <string name="prefEditTextSummary">Введите интервал в секундах, от 1 до 9 с которым изображения будт автоматически переключаться</string>
     <string name="prefEditTextTitle">Интервал</string>
     <string name="prefEditHint">Введите интервал</string>
 
@@ -22,7 +22,12 @@
 
     <string name="prefListAnimSummary">Выбирете один из предложенных видов анимации</string>
     <string name="prefListAnimTitle">Вид анимации</string>
+
     <string name="dialogPositiveButton">Ok</string>
+    <string name="alertMessage">Введите коментарий</string>
+    <string name="alertTitle">Комментарий</string>
+    <string name="alertPosButton">Ok</string>
+
     <string-array name="entries">
         <item>one</item>
         <item>two</item>

@@ -12,6 +12,7 @@ import java.util.Random;
  */
 public class Setting {
     public void animation(int i, ViewPager viewPager) {
+        Log.d(MainActivity.TAG,"animation()");
         switch (i) {
             case 1:
                 viewPager.setPageTransformer(true, new DepthPageTransformer());
@@ -25,6 +26,7 @@ public class Setting {
         }
     }
     public int preferenceRandom(int pageNumber,int argumentPage) {
+        Log.d(MainActivity.TAG,"preferenceRandom()");
         if (MainActivity.prefRand){
             Random random = new Random();
             pageNumber = random.nextInt(MainActivity.pageCount);
@@ -34,7 +36,7 @@ public class Setting {
     }
 
     public void addFavorite(ArrayList<Image>arrayList, String comment,HashMap<Integer,Image> hashMap, int index) {
-
+        Log.d(MainActivity.TAG,"addFavorite()");
             if (!arrayList.contains(hashMap.get(index))) {
                 Image image = hashMap.get(index);
                 if (image != null) {
@@ -44,8 +46,8 @@ public class Setting {
                         }
                     }
 
-    public Image getFavoriteUrl(ArrayList<Image> arrayList) {
-        Log.d(MainActivity.TAG, "showFavorite");
+    public Image getFavorite(ArrayList<Image> arrayList) {
+        Log.d(MainActivity.TAG, "getFavorite");
         Random random = new Random();
         Image image = null;
         if (arrayList.size() != 0) {
