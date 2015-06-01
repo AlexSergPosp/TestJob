@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -33,7 +32,7 @@ public class GalleryAdapter extends Fragment {
      static String textForTextView;
      public static ImageView imageView;
      public static String URL1;
-    private TextView textViewForcomment;
+     private TextView textViewForcomment;
             // Constructor
     static GalleryAdapter newInstance(int page){
             Log.d(MainActivity.TAG,"GalleryAdapter newInstance");
